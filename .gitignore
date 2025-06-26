@@ -1,0 +1,26 @@
+ 
+# Node.js (backend)
+Backend/node_modules/
+Backend/dist/
+Backend/build/
+Backend/.env
+Backend/coverage/
+
+# Flutter (frontend)
+Frontend\placement_prep/build/
+Frontend\placement_prep/.dart_tool/
+Frontend\placement_prep/.flutter-plugins
+Frontend\placement_prep/.packages
+
+# Common IDE / system files
+.idea/
+.vscode/
+*.iml
+*.log
+.DS_Store
+Thumbs.db
+
+# General
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

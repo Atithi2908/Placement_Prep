@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const candidateRoutes = require('./routes/CandidateRoutes');
 const employerRoutes = require('./routes/EmployerRoutes');
 const jobRoutes = require('./routes/JobRoutes');
-mongoose.connect('mongodb+srv://Atithi:ddMo2r00CmNGloWW@cluster0.3gndcpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('mongodb+srv://Atithi:jbIPL9kzW2yICjN2@cluster0.3gndcpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -20,6 +20,6 @@ app.get('/', (req, res) => {
   app.use('/employer', employerRoutes);
   app.use('/job', require('./routes/JobRoutes'));
   
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});   
+app.listen(3000, '0.0.0.0', () => {
+  console.log(`Server is running at http://0.0.0.0:3000`);
+});

@@ -4,22 +4,8 @@ const Employer = require('../models/Employer');
 const bcrypt = require('bcrypt');
 const JWT_SECRET = "atithi@1234";
 const jwt = require('jsonwebtoken');
+const authMiddleware = require('../middlewares/auth.middleware');
 
-const authMiddleware = (req, res, next) => {
-    const token = req.headers['token'];
-    if (!token) {
-        return res.status(401).json({ message: 'No token, authorization denied' });
-    }
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = decoded;
-        console.log('Decoded token:', decoded);
-        next();
-    } catch (error) {
-        console.error('Token verification failed:', error);
-        res.status(401).json({ message: 'Token is not valid' });
-    }
-};
 
 router.post('/signup', async (req, res) => {
     const { companyName, companyEmail, employerName,password, phone } = req.body;
