@@ -4,7 +4,7 @@ const Candidate = require('../models/Candidate');
 const Application = require('../models/Application');
 const Job = require('../models/Job');
 
-const JWT_SECRET = "atithi@1234"; 
+const jwtSecret = process.env.JWT_SECRET;
 const Task = require('../models/Task'); // Assuming you have a Task model
 const signup = async (req, res) => {
     const { name, email, password } = req.body;
@@ -193,6 +193,7 @@ const markTaskUndone = async (req, res) => {
             return res.status(404).json({ message: 'No tasks found for this date' });
         }
         const taskItem = taskDoc.Task.id(id);
+        console.log('Task item found:', taskItem);
         if (!taskItem) {
             return res.status(404).json({ message: 'Task not found' });
         }
@@ -203,7 +204,6 @@ const markTaskUndone = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
-    res.status(200).json({ message: 'Task marked as undone', task: taskItem });
 };
 
 

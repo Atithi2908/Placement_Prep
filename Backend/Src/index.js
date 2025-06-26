@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 const candidateRoutes = require('./routes/CandidateRoutes');
 const employerRoutes = require('./routes/EmployerRoutes');
 const jobRoutes = require('./routes/JobRoutes');
-mongoose.connect('mongodb+srv://Atithi:jbIPL9kzW2yICjN2@cluster0.3gndcpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+require('dotenv').config();
+const uri = process.env.MONGODB_URI;
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
