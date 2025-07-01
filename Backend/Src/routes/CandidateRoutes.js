@@ -16,7 +16,8 @@ const {
     addTasks,
     getTasks,
     markTaskDone,
-    markTaskUndone
+    markTaskUndone,
+    dailyQuestion
 } = require('../controllers/Candidate.controller');
 
 router.post('/signup', signup);
@@ -28,5 +29,6 @@ router.post('/task/add', authMiddleware, addTasks);
 router.get('/task/get', authMiddleware, getTasks);
 router.patch('/task/mark-done', authMiddleware, markTaskDone);
 router.patch('/task/mark-undone', authMiddleware, markTaskUndone);
+router.get('/daily-question',dailyQuestion);
 
 module.exports = router;

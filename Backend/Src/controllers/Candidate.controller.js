@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const Candidate = require('../models/Candidate');
 const Application = require('../models/Application');
 const Job = require('../models/Job');
-
+const Question = require('../models/question'); // Assuming you have a Question model
 const jwtSecret = process.env.JWT_SECRET;
 const Task = require('../models/Task'); // Assuming you have a Task model
 const signup = async (req, res) => {
@@ -206,6 +206,20 @@ const markTaskUndone = async (req, res) => {
     }
 };
 
+const dailyQuestion = async (req, res) => {
+    try {
+        console.log('Fetching daily question');
+        const question = await Question.findOne().sort({ _id: -1 });
+        if (!question) {
+            return res.status(404).json({ message: 'No question found for today' });
+        }
+        res.status(200).json({ question });
+    } catch (error) {
+        console.error('Error fetching daily question:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 module.exports = {
     signup,
@@ -215,5 +229,6 @@ module.exports = {
     addTasks,
     getTasks,
 markTaskDone,
-    markTaskUndone
+    markTaskUndone,
+    dailyQuestion
 };
