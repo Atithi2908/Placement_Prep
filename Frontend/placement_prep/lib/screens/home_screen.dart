@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'dart:ui';
 
-
 class HomeScreen extends StatelessWidget {
   void _logout(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context, listen: false);
@@ -18,10 +17,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Home',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.w700,
-          ),
+          style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
         ),
         actions: [
           IconButton(
@@ -40,25 +36,34 @@ class HomeScreen extends StatelessWidget {
             colors: [
               Color(0xFF0F172A), // slate-900
               Color(0xFF581C87), // purple-900
-              Color(0xFF0F172A), 
+              Color(0xFF0F172A),
             ],
           ),
         ),
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal:screenWidth * 0.05,vertical: screenHeight * 0.03),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.05,
+            vertical: screenHeight * 0.03,
+          ),
 
           child: Column(
             children: [
-              _buildWelcomeCard(),
+              _buildWelcomeCard(context),
               SizedBox(height: screenHeight * 0.03),
-              InkWell(onTap:(){Navigator.pushNamed(context, '/task');},child: _buildProgressCard()),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/task');
+                },
+                child: _buildProgressCard(context),
+              ),
               SizedBox(height: screenHeight * 0.03),
+              
               _buildChallengeCard(context),
               SizedBox(height: screenHeight * 0.03),
               _buildTopicsCard(context),
               SizedBox(height: screenHeight * 0.03),
               _buildActionCard(context),
-              SizedBox(height:screenHeight * 0.03),  
+              SizedBox(height: screenHeight * 0.03),
               _buildAchievementsCard(context),
             ],
           ),
@@ -67,7 +72,9 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWelcomeCard() {
+  Widget _buildWelcomeCard(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return _buildCard(
       child: Row(
         children: [
@@ -85,10 +92,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Text(
                   'Today is a great day to practice',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
               ],
             ),
@@ -102,7 +106,9 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressCard() {
+  Widget _buildProgressCard(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return _buildCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,13 +121,13 @@ class HomeScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: screenHeight * .02),
           LinearProgressIndicator(
             value: 0.65,
             backgroundColor: Colors.white24,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: screenHeight * .01),
           Align(
             alignment: Alignment.centerRight,
             child: Text(
@@ -135,6 +141,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildChallengeCard(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return _buildCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,16 +159,14 @@ class HomeScreen extends StatelessWidget {
             'Solve the problem of the day',
             style: TextStyle(color: Colors.white70),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: screenHeight * 0.02),
           ElevatedButton(
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Starting Daily Challenge! 🚀')),
-              );
+               Navigator.pushNamed(context, '/dailyquestion');
+             
             },
             child: Text('Try Now'),
             style: ElevatedButton.styleFrom(
-              
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -172,88 +178,104 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-Widget _buildTopicsCard(BuildContext context) {
-  double screenwidth = MediaQuery.of(context).size.width;
-  double screenheight = MediaQuery.of(context).size.height; 
-  return _buildCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Practice Topics',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+  Widget _buildTopicsCard(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenwidth = MediaQuery.of(context).size.width;
+    return _buildCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Practice Topics',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        SizedBox(height: 16),
+          SizedBox(height: screenHeight * .02),
 
-        // HORIZONTAL SCROLLABLE TOPICS
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
+          // HORIZONTAL SCROLLABLE TOPICS
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildTopicButton(context, 'Array', '⊞', Colors.orange),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'String', '🔤', Colors.teal),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'Stack', '📚', Colors.deepOrange),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'Tree', '🌳', Colors.purple),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'DP', '↻', Colors.blue),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'Heap', '⛏', Colors.red),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'Graph', '📈', Colors.green),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'Queue', '📬', Colors.indigo),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'LinkedList', '🔗', Colors.cyan),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(context, 'Greedy', '💰', Colors.amber),
+                SizedBox(width: screenwidth * 0.04),
+                _buildTopicButton(
+                  context,
+                  'Bit Manipulation',
+                  '💡',
+                  Colors.lime,
+                ),
+                SizedBox(width: screenwidth * 0.04),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionCard(BuildContext context) {
+     double screenHeight = MediaQuery.of(context).size.height;
+    double screenwidth = MediaQuery.of(context).size.width;
+    return _buildCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Actions',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height:screenHeight*.02),
+          Row(
             children: [
-              _buildTopicButton(context, 'Array', '⊞', Colors.orange),
-              SizedBox(width:screenwidth* 0.04),
-              _buildTopicButton(context, 'DP', '↻', Colors.blue),
-              SizedBox(width: 12),
-              _buildTopicButton(context, 'Graph', '📈', Colors.green),
-              SizedBox(width: 12),
-              _buildTopicButton(context, 'Tree', '🌳', Colors.purple),
-              SizedBox(width: 12),
-              _buildTopicButton(context, 'String', '🔤', Colors.teal),
-              SizedBox(width: 12),
-              _buildTopicButton(context, 'Heap', '⛏', Colors.red),
-              // Add more if needed
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Review Mistakes',
+                  '📝',
+                  Colors.white24,
+                ),
+              ),
+              SizedBox(width: screenwidth*.04),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Mock Interview',
+                  '💬',
+                  Colors.pink.withOpacity(0.3),
+                ),
+              ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildActionCard(BuildContext context) {
-  return _buildCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Actions',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionButton(
-                context,
-                'Review Mistakes',
-                '📝',
-                Colors.white24,
-              ),
-            ),
-            SizedBox(width: 12),
-            Expanded(
-              child: _buildActionButton(
-                context,
-                'Mock Interview',
-                '💬',
-                Colors.pink.withOpacity(0.3),
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 
   Widget _buildTopicButton(
     BuildContext context,
@@ -261,28 +283,25 @@ Widget _buildActionCard(BuildContext context) {
     String emoji,
     Color color,
   ) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenwidth = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Opening $title practice! 📚')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Opening $title practice! $emoji')));
       },
       style: ElevatedButton.styleFrom(
-        
-        padding: EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        padding: EdgeInsets.all(screenwidth*.06),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(screenwidth*0.04)),
       ),
       child: Column(
         children: [
           Text(emoji, style: TextStyle(fontSize: 24)),
-          SizedBox(height: 8),
+          SizedBox(height: screenHeight*.01 ),
           Text(title),
         ],
       ),
-      
-      
     );
   }
 
@@ -294,16 +313,13 @@ Widget _buildActionCard(BuildContext context) {
   ) {
     return ElevatedButton(
       onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Opening $title! $emoji')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Opening $title! $emoji')));
       },
-        style: ElevatedButton.styleFrom(
-
+      style: ElevatedButton.styleFrom(
         padding: EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       child: Column(
         children: [
@@ -316,7 +332,6 @@ Widget _buildActionCard(BuildContext context) {
           ),
         ],
       ),
-    
     );
   }
 
@@ -334,30 +349,30 @@ Widget _buildActionCard(BuildContext context) {
         ),
         trailing: Icon(Icons.chevron_right, color: Colors.white),
         onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Viewing achievements! 🏆')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Viewing achievements! 🏆')));
         },
       ),
     );
   }
 
-Widget _buildCard({required Widget child}) {
-  return ClipRRect(
-    borderRadius: BorderRadius.circular(16),
-    child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white10,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white24),
+  Widget _buildCard({required Widget child}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white10,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white24),
+          ),
+          child: child,
         ),
-        child: child,
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -7,8 +7,8 @@ import 'screens/home_screen.dart';
 import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/signup_screen.dart';
-
-void main() {
+import 'screens/daily_question_screen.dart';
+  void main() {
   runApp(
     MultiProvider(
       providers: [
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignupScreen(),
         '/task': (context) =>  DailyTaskScreen(),
+        '/dailyquestion': (context) => DailyQuestionScreen(),
       },
           theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 232, 234, 255), // Dark Indigo

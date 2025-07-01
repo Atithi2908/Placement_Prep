@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/tasks.dart';
 
 class DailyTaskScreen extends StatefulWidget {
   @override
@@ -473,22 +474,3 @@ Widget _buildTaskItem(Task task) {
   }
 }
 
-class Task {
-  final String id;
-  final String title;
-  final bool completed;
-
-  Task({
-    required this.id,
-    required this.title,
-    required this.completed,
-  });
-
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return Task(
-      id: json['_id'],
-      title: json['title'],
-      completed: json['completed'],
-    );
-  }
-}
