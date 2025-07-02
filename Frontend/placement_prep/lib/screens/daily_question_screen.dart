@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/questions.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:ui';
 
 class DailyQuestionScreen extends StatefulWidget {
   const DailyQuestionScreen({Key? key}) : super(key: key);
@@ -11,7 +12,6 @@ class DailyQuestionScreen extends StatefulWidget {
 }
 
 class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
-  @override
   Question? _question;
   bool _isLoading = true;
   int selectedIndex = -1;
@@ -56,55 +56,71 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 )
-                : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _question!.question,
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                : ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1), // semi-transparent
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white24),
+      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _question!.question,
+                            style: TextStyle(
+                              fontSize: 22,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 24),
+                          ...List.generate(_question!.options.length, (index) {
+                            Color bgColor = Colors.white10;
+                            if (selectedIndex != -1) {
+                              final selectedText = _question!.options[selectedIndex];
+                              if (_question!.options[index] ==
+                                  _question!.correctOption){
+                                bgColor = Colors.green;}
+                              else if (_question!.options[index] == selectedText){
+                                bgColor = Colors.red;}
+                            }
+                      
+                            return GestureDetector(
+                              onTap:
+                                  selectedIndex == -1
+                                      ? () {
+                                        setState(() {
+                                          selectedIndex = index;
+                                        });
+                                      }
+                                      : null,
+                              child: Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.symmetric(vertical: 8),
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: bgColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: Colors.white24),
+                                ),
+                                child: Text(
+                                  _question!.options[index],
+                                  style: TextStyle(fontSize: 16, color: Colors.white),
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 24),
-                    ...List.generate(_question!.options.length, (index) {
-                      Color bgColor = Colors.white10;
-                      if (selectedIndex != -1) {
-                        final selectedText = _question!.options[selectedIndex];
-                        if (_question!.options[index] ==
-                            _question!.correctOption)
-                          bgColor = Colors.green;
-                        else if (_question!.options[index] == selectedText)
-                          bgColor = Colors.red;
-                      }
-
-                      return GestureDetector(
-                        onTap:
-                            selectedIndex == -1
-                                ? () {
-                                  setState(() {
-                                    selectedIndex = index;
-                                  });
-                                }
-                                : null,
-                        child: Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: bgColor,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.white24),
-                          ),
-                          child: Text(
-                            _question!.options[index],
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
+                  ),
                 ),
       ),
     );
