@@ -3,9 +3,12 @@ const jwt = require('jsonwebtoken');
 const Candidate = require('../models/Candidate');
 const Application = require('../models/Application');
 const Job = require('../models/Job');
-const Question = require('../models/question'); // Assuming you have a Question model
+const Question = require('../models/question'); 
 const jwtSecret = process.env.JWT_SECRET;
-const Task = require('../models/Task'); // Assuming you have a Task model
+const Task = require('../models/Task');
+const dotenv = require('dotenv');
+dotenv.config();
+const axios = require('axios');
 const signup = async (req, res) => {
     const { name, email, password } = req.body;
     try {
@@ -220,7 +223,53 @@ const dailyQuestion = async (req, res) => {
     }
 };
 
+const generateQuiz = async (req, res) => {
+    const topic = req.query.topic;
+    const count = req.query.count || 5; 
+    console.log('your api key is:', process.env.OPENROUTER_API_KEY);
+    if (!topic) {
+  return res.status(400).json({ message: 'Topic is required' });
+}
+    try{
+const response = await axios.post('https://openrouter.ai/api/v1/chat/completions',
+{
+    model: "deepseek/deepseek-chat-v3-0324:free",
+    messages: [
+        {
+            role: "system",
+            content: "You are a helpful assistant that generates quiz questions based on the given topic."
+        },
+        {
+            role: "user",
+content: `Generate ${count} MCQs on the topic of ${topic}. Return only a JSON array with no explanation or markdown. Format:
+[
+  {
+    "question": "...",
+    "options": ["...", "...", "...", "..."],
+    "answer": "..."
+  }
+]`
+        }
+    ],
+}
+,{
+    headers: {
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json'
+    }
+});
 
+  const message = response.data.choices[0].message.content;
+  const mcqs = JSON.parse(message);
+    res.json({ mcqs });
+
+
+
+}catch (error) {
+        console.error('Error generating quiz:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 module.exports = {
     signup,
     signin,
@@ -230,5 +279,6 @@ module.exports = {
     getTasks,
 markTaskDone,
     markTaskUndone,
-    dailyQuestion
+    dailyQuestion,
+    generateQuiz
 };
