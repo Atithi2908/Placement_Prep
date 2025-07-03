@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'dart:ui';
+import 'conduct_quiz_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   void _logout(BuildContext context) {
@@ -218,15 +219,8 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(width: screenwidth * 0.04),
                 _buildTopicButton(context, 'LinkedList', '🔗', Colors.cyan),
                 SizedBox(width: screenwidth * 0.04),
-                _buildTopicButton(context, 'Greedy', '💰', Colors.amber),
-                SizedBox(width: screenwidth * 0.04),
-                _buildTopicButton(
-                  context,
-                  'Bit Manipulation',
-                  '💡',
-                  Colors.lime,
-                ),
-                SizedBox(width: screenwidth * 0.04),
+               
+     
               ],
             ),
           ),
@@ -287,9 +281,12 @@ class HomeScreen extends StatelessWidget {
     double screenwidth = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
-        ScaffoldMessenger.of(
+        Navigator.push(
           context,
-        ).showSnackBar(SnackBar(content: Text('Opening $title practice! $emoji')));
+          MaterialPageRoute(
+            builder: (context) => ConductQuizScreen(defaultOption: title),
+          ),
+        );
       },
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.all(screenwidth*.06),

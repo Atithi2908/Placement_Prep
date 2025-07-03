@@ -8,6 +8,7 @@ import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/signup_screen.dart';
 import 'screens/daily_question_screen.dart';
+import 'screens/conduct_quiz_screen.dart';
   void main() {
   runApp(
     MultiProvider(
@@ -31,11 +32,12 @@ class MyApp extends StatelessWidget {
           title: 'Placement Prep App',
         
       routes: {
-            
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignupScreen(),
         '/task': (context) =>  DailyTaskScreen(),
         '/dailyquestion': (context) => DailyQuestionScreen(),
+        '/conductquiz': (context) => ConductQuizScreen(defaultOption: 'Array'), // Default option can be changed
+        // Default option for generate quiz
       },
           theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 232, 234, 255), // Dark Indigo

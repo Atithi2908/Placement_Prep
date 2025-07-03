@@ -42,7 +42,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF0F172A), Color(0xFF581C87), Color(0xFF0F172A)],
+            colors: [Color.fromARGB(255, 39, 32, 90), Color.fromARGB(255, 70, 66, 128), Color.fromARGB(255, 45, 29, 120)],
           ),
         ),
         padding: EdgeInsets.all(16),
@@ -60,12 +60,12 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                   borderRadius: BorderRadius.circular(16),
 
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    filter: ImageFilter.blur(sigmaX: 1, sigmaY: 0),
                     child: Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1), // semi-transparent
+        color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.01), // semi-transparent
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white24),
       ),
@@ -82,7 +82,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                           ),
                           SizedBox(height: 24),
                           ...List.generate(_question!.options.length, (index) {
-                            Color bgColor = Colors.white10;
+                            Color bgColor = const Color.fromARGB(88, 82, 77, 77);
                             if (selectedIndex != -1) {
                               final selectedText = _question!.options[selectedIndex];
                               if (_question!.options[index] ==
