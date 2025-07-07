@@ -3,6 +3,8 @@ import '../models/questions.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:ui';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lottie/lottie.dart';
 
 class DailyQuestionScreen extends StatefulWidget {
   const DailyQuestionScreen({Key? key}) : super(key: key);
@@ -15,6 +17,10 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
   Question? _question;
   bool _isLoading = true;
   int selectedIndex = -1;
+  
+  FlutterTts flutterTts = FlutterTts();
+  bool isSpeaking = false;
+
   @override
   void initState() {
     super.initState();
@@ -22,7 +28,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
         .then((value) {
           setState(() {
             _question = value;
-            debugPrint('Question fetched successfully: ${_question!.question}');
+            debugPrint('Question fetched successfully: \\${_question!.question}');
             _isLoading = false;
           });
         })
@@ -31,6 +37,33 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
             _isLoading = false;
           });
         });
+    flutterTts.setCompletionHandler(() {
+      setState(() {
+        isSpeaking = false;
+      });
+    });
+    flutterTts.setCancelHandler(() {
+      setState(() {
+        isSpeaking = false;
+      });
+    });
+  }
+
+  Future<void> speak(String text) async {
+    setState(() {
+      isSpeaking = true;
+    });
+    await flutterTts.setLanguage("en-IN");
+    await flutterTts.setPitch(1);
+    await flutterTts.setSpeechRate(.4); 
+    await flutterTts.speak(text);
+  }
+
+  Future<void> stopSpeaking() async {
+    await flutterTts.stop();
+    setState(() {
+      isSpeaking = false;
+    });
   }
 
   Widget build(BuildContext context) {
@@ -42,7 +75,7 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color.fromARGB(255, 39, 32, 90), Color.fromARGB(255, 70, 66, 128), Color.fromARGB(255, 45, 29, 120)],
+            colors: [Color.fromARGB(255, 39, 32, 90), Color.fromARGB(255, 48, 46, 86), Color.fromARGB(255, 7, 12, 34)],
           ),
         ),
         padding: EdgeInsets.all(16),
@@ -72,13 +105,31 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            _question!.question,
-                            style: TextStyle(
-                              fontSize: 22,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  _question!.question,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 6,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(!isSpeaking ? Icons.volume_off : Icons.volume_up, color: Colors.white),
+                                onPressed: () {
+                                  if (isSpeaking) {
+                                    stopSpeaking();
+                                  } else {
+                                    speak(_question!.question);
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                           SizedBox(height: 24),
                           ...List.generate(_question!.options.length, (index) {
@@ -87,18 +138,48 @@ class _DailyQuestionScreenState extends State<DailyQuestionScreen> {
                               final selectedText = _question!.options[selectedIndex];
                               if (_question!.options[index] ==
                                   _question!.correctOption){
-                                bgColor = Colors.green;}
+                                bgColor = Colors.green;
+                              }
                               else if (_question!.options[index] == selectedText){
                                 bgColor = Colors.red;}
                             }
-                      
                             return GestureDetector(
                               onTap:
                                   selectedIndex == -1
-                                      ? () {
+                                      ? () async {
                                         setState(() {
                                           selectedIndex = index;
                                         });
+                                        final selectedText = _question!.options[index];
+                                        if (selectedText == _question!.correctOption) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                              backgroundColor: Colors.transparent,
+                                              child: Lottie.asset(
+                                                'assets/images/animation/trophy.json',
+                                                repeat: false,
+                                                width: 200,
+                                                height: 200,
+                                              ),
+                                            ),
+                                          );
+                                          flutterTts.speak("Well done!");
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                              backgroundColor: Colors.transparent,
+                                              child: Lottie.asset(
+                                                'assets/images/animation/Wrong_ans.json',
+                                                repeat: false,
+                                                width: 200,
+                                                height: 200,
+                                              ),
+                                            ),
+                                          );
+                                          flutterTts.speak("Oops, Wrong answer! Correct Answer is: \\${_question!.correctOption}");
+                                        }
                                       }
                                       : null,
                               child: Container(

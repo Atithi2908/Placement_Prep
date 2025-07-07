@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'dart:ui';
 import 'conduct_quiz_screen.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatelessWidget {
   void _logout(BuildContext context) {
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                 child: _buildProgressCard(context),
               ),
               SizedBox(height: screenHeight * 0.03),
-              
+
               _buildChallengeCard(context),
               SizedBox(height: screenHeight * 0.03),
               _buildTopicsCard(context),
@@ -92,15 +93,22 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Today is a great day to practice',
+                  'A great day for practice',
                   style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
               ],
             ),
           ),
+          // Remove CircleAvatar and directly display Lottie
           CircleAvatar(
-            backgroundColor: Colors.white24,
-            child: Icon(Icons.person, color: Colors.white),
+            radius: screenWidth * 0.12,
+            backgroundColor: DefaultSelectionStyle.defaultColor.withOpacity(0),
+            child: Lottie.asset(
+              'assets/images/animation/Profile.json',
+              repeat: true,
+              width: screenWidth * 0.4,
+              height: screenHeight*0.4,
+            ),
           ),
         ],
       ),
@@ -163,8 +171,7 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: screenHeight * 0.02),
           ElevatedButton(
             onPressed: () {
-               Navigator.pushNamed(context, '/dailyquestion');
-             
+              Navigator.pushNamed(context, '/dailyquestion');
             },
             child: Text('Try Now'),
             style: ElevatedButton.styleFrom(
@@ -219,8 +226,6 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(width: screenwidth * 0.04),
                 _buildTopicButton(context, 'LinkedList', '🔗', Colors.cyan),
                 SizedBox(width: screenwidth * 0.04),
-               
-     
               ],
             ),
           ),
@@ -230,7 +235,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildActionCard(BuildContext context) {
-     double screenHeight = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery.of(context).size.height;
     double screenwidth = MediaQuery.of(context).size.width;
     return _buildCard(
       child: Column(
@@ -244,7 +249,7 @@ class HomeScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height:screenHeight*.02),
+          SizedBox(height: screenHeight * .02),
           Row(
             children: [
               Expanded(
@@ -255,7 +260,7 @@ class HomeScreen extends StatelessWidget {
                   Colors.white24,
                 ),
               ),
-              SizedBox(width: screenwidth*.04),
+              SizedBox(width: screenwidth * .04),
               Expanded(
                 child: _buildActionButton(
                   context,
@@ -289,13 +294,15 @@ class HomeScreen extends StatelessWidget {
         );
       },
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(screenwidth*.06),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(screenwidth*0.04)),
+        padding: EdgeInsets.all(screenwidth * .06),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(screenwidth * 0.04),
+        ),
       ),
       child: Column(
         children: [
           Text(emoji, style: TextStyle(fontSize: 24)),
-          SizedBox(height: screenHeight*.01 ),
+          SizedBox(height: screenHeight * .01),
           Text(title),
         ],
       ),
