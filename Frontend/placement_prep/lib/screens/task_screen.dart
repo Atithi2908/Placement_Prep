@@ -208,11 +208,7 @@ Future<void> _markTaskUndone(Task t) async {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F172A),
-              Color(0xFF581C87),
-              Color(0xFF0F172A),
-            ],
+             colors: [Color.fromARGB(255, 39, 32, 90), Color.fromARGB(255, 48, 46, 86), Color.fromARGB(255, 7, 12, 34)],
           ),
         ),
         child: SizedBox.expand(

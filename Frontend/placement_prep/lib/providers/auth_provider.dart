@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider with ChangeNotifier {
   String? _token;
+  String? name;
 
   bool get isAuthenticated => _token != null;
     AuthProvider() {
@@ -39,8 +40,12 @@ class AuthProvider with ChangeNotifier {
         debugPrint("Logged in successfully");
  debugPrint("Data is: $data");
         _token = data['token'];
+        name = data['candidateName'];
        final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', _token!);
+        await prefs.setString('name', name!);
+        debugPrint("Token saved to SharedPreferences");
+        debugPrint("Name saved to SharedPreferences: $name");
 
         debugPrint("Logged in and saved Token: $_token"); 
         debugPrint("Token is: $_token");

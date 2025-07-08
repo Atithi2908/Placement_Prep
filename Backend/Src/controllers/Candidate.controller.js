@@ -3,11 +3,12 @@ const jwt = require('jsonwebtoken');
 const Candidate = require('../models/Candidate');
 const Application = require('../models/Application');
 const Job = require('../models/Job');
-const Question = require('../models/question'); 
+const Question = require('../models/question');
+const dotenv = require('dotenv');
+dotenv.config(); 
 const jwtSecret = process.env.JWT_SECRET;
 const Task = require('../models/Task');
-const dotenv = require('dotenv');
-dotenv.config();
+
 const axios = require('axios');
 const signup = async (req, res) => {
     const { name, email, password } = req.body;
@@ -48,7 +49,7 @@ const signin = async (req, res) => {
         const token = jwt.sign({
             id: candidate._id,
             email: candidate.email,
-        }, JWT_SECRET, {
+        }, jwtSecret, {
         });
         console.log('Signin successful for email:', email);
         res.status(200).json({ token, candidateId: candidate._id, candidateName: candidate.name });

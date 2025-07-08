@@ -4,7 +4,7 @@ import '../providers/auth_provider.dart';
 import 'dart:ui';
 import 'conduct_quiz_screen.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class HomeScreen extends StatelessWidget {
   void _logout(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context, listen: false);
@@ -15,66 +15,73 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Home',
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => _logout(context),
-            icon: Icon(Icons.logout),
-          ),
-        ],
-        backgroundColor: Color.fromARGB(255, 153, 167, 204),
-        elevation: 500,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF0F172A), // slate-900
-              Color(0xFF581C87), // purple-900
-              Color(0xFF0F172A),
-            ],
-          ),
-        ),
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.05,
-            vertical: screenHeight * 0.03,
-          ),
-
-          child: Column(
-            children: [
-              _buildWelcomeCard(context),
-              SizedBox(height: screenHeight * 0.03),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/task');
-                },
-                child: _buildProgressCard(context),
+    // Fetch name from SharedPreferences
+    // Use a FutureBuilder to get the name asynchronously
+    return FutureBuilder<SharedPreferences>(
+      future: SharedPreferences.getInstance(),
+      builder: (context, snapshot) {
+        String name = 'User';
+        if (snapshot.hasData) {
+          name = snapshot.data!.getString('name') ?? 'User';
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Home',
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () => _logout(context),
+                icon: Icon(Icons.logout),
               ),
-              SizedBox(height: screenHeight * 0.03),
-
-              _buildChallengeCard(context),
-              SizedBox(height: screenHeight * 0.03),
-              _buildTopicsCard(context),
-              SizedBox(height: screenHeight * 0.03),
-              _buildActionCard(context),
-              SizedBox(height: screenHeight * 0.03),
-              _buildAchievementsCard(context),
             ],
+            backgroundColor: Color.fromARGB(255, 153, 167, 204),
+            elevation: 500,
           ),
-        ),
-      ),
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color.fromARGB(255, 39, 32, 90), Color.fromARGB(255, 48, 46, 86), Color.fromARGB(255, 7, 12, 34)],
+              ),
+            ),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.05,
+                vertical: screenHeight * 0.03,
+              ),
+
+              child: Column(
+                children: [
+                  _buildWelcomeCard(context, name),
+                  SizedBox(height: screenHeight * 0.03),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/task');
+                    },
+                    child: _buildProgressCard(context),
+                  ),
+                  SizedBox(height: screenHeight * 0.03),
+
+                  _buildChallengeCard(context),
+                  SizedBox(height: screenHeight * 0.03),
+                  _buildTopicsCard(context),
+                  SizedBox(height: screenHeight * 0.03),
+                  _buildActionCard(context),
+                  SizedBox(height: screenHeight * 0.03),
+                  _buildAchievementsCard(context),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildWelcomeCard(BuildContext context) {
+  Widget _buildWelcomeCard(BuildContext context, String name) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return _buildCard(
@@ -85,7 +92,7 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome, Atithi',
+                  'Welcome, $name',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 28,
@@ -99,16 +106,11 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          // Remove CircleAvatar and directly display Lottie
-          CircleAvatar(
-            radius: screenWidth * 0.12,
-            backgroundColor: DefaultSelectionStyle.defaultColor.withOpacity(0),
-            child: Lottie.asset(
-              'assets/images/animation/Profile.json',
-              repeat: true,
-              width: screenWidth * 0.4,
-              height: screenHeight*0.4,
-            ),
+          Lottie.asset(
+            'assets/images/animation/Profile.json',
+            repeat: true,
+            width: screenWidth * 0.24,
+            height: screenWidth * 0.24,
           ),
         ],
       ),
