@@ -227,6 +227,7 @@ const dailyQuestion = async (req, res) => {
 const generateQuiz = async (req, res) => {
     const topic = req.query.topic;
     const count = req.query.count || 5; 
+    console.log('Request to generate quiz');
     console.log('your api key is:', process.env.OPENROUTER_API_KEY);
     if (!topic) {
   return res.status(400).json({ message: 'Topic is required' });
@@ -260,8 +261,12 @@ content: `Generate ${count} MCQs on the topic of ${topic}. Return only a JSON ar
     }
 });
 
+ 
   const message = response.data.choices[0].message.content;
-  const mcqs = JSON.parse(message);
+
+const cleanMessage = message.replace(/```json|```/g, '').trim();
+
+const mcqs = JSON.parse(cleanMessage);
     res.json({ mcqs });
 
 

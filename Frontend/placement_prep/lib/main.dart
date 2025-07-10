@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         '/task': (context) =>  DailyTaskScreen(),
         '/dailyquestion': (context) => DailyQuestionScreen(),
         '/conductquiz': (context) => ConductQuizScreen(defaultOption: 'Array'), // Default option can be changed
-        // Default option for generate quiz
+        '/home': (context)=> HomeScreen()
       },
           theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 232, 234, 255), // Dark Indigo

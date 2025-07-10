@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:placement_prep/screens/quiz_screen.dart';
 
 class ConductQuizScreen extends StatefulWidget {
   final String defaultOption;
@@ -21,6 +22,7 @@ class _ConductQuizScreenState extends State<ConductQuizScreen> {
     'Queue',
     'DP',
     'Recursion',
+    'Heap',
   ];
   String? selectedValue;
   int? selectedNumQuestions = 5;
@@ -191,10 +193,15 @@ class _ConductQuizScreenState extends State<ConductQuizScreen> {
                 ElevatedButton(
                   onPressed: fairPracticeChecked
                       ? () {
-                          Navigator.pushNamed(context, '/quiz', arguments: {
-                            'topic': selectedValue,
-                            'numQuestions': selectedNumQuestions,
-                          });
+                          Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizScreen(
+              topic: selectedValue ?? 'Array',
+              count: selectedNumQuestions ?? 5,
+            ),
+          ),
+        );
                         }
                       : () {
                           ScaffoldMessenger.of(context).showSnackBar(

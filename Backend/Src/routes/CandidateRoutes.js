@@ -31,5 +31,5 @@ router.get('/task/get', authMiddleware, getTasks);
 router.patch('/task/mark-done', authMiddleware, markTaskDone);
 router.patch('/task/mark-undone', authMiddleware, markTaskUndone);
 router.get('/daily-question',dailyQuestion);
-router.post('/generate-quiz',generateQuiz);
+router.get('/generate-quiz',generateQuiz);
 module.exports = router;

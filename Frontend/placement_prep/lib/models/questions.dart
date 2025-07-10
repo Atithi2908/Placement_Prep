@@ -9,4 +9,11 @@ class Question {
     required this.options,
     required this.correctOption,
   });
+   factory Question.fromJson(Map<String, dynamic> json) {
+    return Question(
+      question: json['question'],
+      options: List<String>.from(json['options']),
+      correctOption: json['answer'],
+    );
+  }
 }

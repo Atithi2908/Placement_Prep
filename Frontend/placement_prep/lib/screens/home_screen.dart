@@ -29,6 +29,7 @@ class HomeScreen extends StatelessWidget {
             title: Text(
               'Home',
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+              
             ),
             actions: [
               IconButton(
