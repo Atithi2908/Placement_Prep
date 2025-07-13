@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:lottie/lottie.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
 
 class QuizScreen extends StatefulWidget {
   final String topic;
@@ -24,6 +25,26 @@ class _QuizScreenState extends State<QuizScreen> {
   bool isLoading = true;
   bool generated = false;
   bool quizStarted = false;
+  int seconds = 0;
+  Timer? timer;
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        seconds++;
+      });
+    });
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+  }
+
+  String formatTime(int seconds) {
+    final mins = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return "$mins:$secs";
+  }
 
   Future<List<Question>> fetchMCQs(String topic, int count) async {
     debugPrint("came to collecting response");
@@ -67,97 +88,108 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-if (!quizStarted) {
-  return Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color.fromARGB(255, 39, 32, 90),
-          Color.fromARGB(255, 48, 46, 86),
-          Color.fromARGB(255, 7, 12, 34),
-        ],
-      ),
-    ),
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Lottie.asset(
-            'assets/images/animation/Generating.json',
-            width: screenWidth * .8,
-            height: screenHeight * 0.4,
+    if (!quizStarted) {
+      return Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 39, 32, 90),
+              Color.fromARGB(255, 48, 46, 86),
+              Color.fromARGB(255, 7, 12, 34),
+            ],
           ),
-          const SizedBox(height: 40),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-            child: Text(
-              isLoading
-                  ? 'Please wait! We are generating your quiz...'
-                  : '✅ Quiz is ready! Press Start to begin.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.merriweather(
-                textStyle: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Color.fromARGB(235, 255, 255, 255),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                'assets/images/animation/Generating.json',
+                width: screenWidth * .8,
+                height: screenHeight * 0.4,
+              ),
+              const SizedBox(height: 40),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                child: Text(
+                  isLoading
+                      ? 'Please wait! We are generating your quiz...'
+                      : '✅ Quiz is ready! Press Start to begin.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.merriweather(
+                    textStyle: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromARGB(235, 255, 255, 255),
+                    ),
+                    decoration: TextDecoration.none,
+                  ),
                 ),
-                decoration: TextDecoration.none,
               ),
-            ),
+              const SizedBox(height: 20),
+              if (!isLoading)
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      quizStarted = true;
+                      startTimer();
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 16,
+                    ),
+                    backgroundColor: Colors.green,
+                  ),
+                  child: const Text(
+                    "Start Quiz",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+            ],
           ),
-          const SizedBox(height: 20),
-          if (!isLoading)
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  quizStarted = true;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                backgroundColor: Colors.green,
-              ),
-              child: const Text("Start Quiz", style: TextStyle(fontSize: 18)),
-            ),
-        ],
-      ),
-    ),
-  );
-}
+        ),
+      );
+    }
 
     final question = questions[currentIndex];
     return PopScope(
-  canPop: false, // Prevent default pop until we allow it manually
-  onPopInvoked: (didPop) async {
-    if (didPop) return; // If already popped (e.g. programmatically), do nothing
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
 
-    bool exitConfirmed = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Exit Quiz?"),
-        content: const Text("Are you sure you want to leave the quiz? Your progress will be lost."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false), // Stay
-            child: const Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.pushNamedAndRemoveUntil(
-      context,
-      '/home',
-      (Route<dynamic> route) => false, // remove all previous routes
-    );
-            },
-            child: const Text("Yes, Exit"),
-          ),
-        ],
-      ),
-    );
-  },
+        bool exitConfirmed = await showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text("Exit Quiz?"),
+                content: const Text(
+                  "Are you sure you want to leave the quiz? Your progress will be lost.",
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false), // Stay
+                    child: const Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/home',
+                        (Route<dynamic> route) =>
+                            false, // remove all previous routes
+                      );
+                    },
+                    child: const Text("Yes, Exit"),
+                  ),
+                ],
+              ),
+        );
+      },
       child: Scaffold(
         appBar: AppBar(title: const Text('Quiz')),
         backgroundColor: const Color.fromARGB(255, 153, 167, 204),
@@ -194,9 +226,17 @@ if (!quizStarted) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Question ${currentIndex + 1} of ${questions.length}',
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                    Row(
+                      children: [
+                        Text(
+                          'Question ${currentIndex + 1} of ${questions.length}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(formatTime(seconds)),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -286,11 +326,20 @@ if (!quizStarted) {
                                       content: Text(
                                         'You have answered all questions! your final score is $score',
                                       ),
-      
+
                                       actions: [
                                         TextButton(
                                           onPressed:
-                                              () => Navigator.of(context).pop(),
+                                              () => {
+                                                Navigator.of(context).pop(),
+                                                Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  '/home',
+                                                  (Route<dynamic> route) =>
+                                                      false, // remove all previous routes
+                                                ),
+                                              },
+
                                           child: const Text('OK'),
                                         ),
                                       ],

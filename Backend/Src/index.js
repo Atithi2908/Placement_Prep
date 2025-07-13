@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const candidateRoutes = require('./routes/CandidateRoutes');
 const employerRoutes = require('./routes/EmployerRoutes');
 const jobRoutes = require('./routes/JobRoutes');
+const groupRoutes = require('./routes/GroupRoutes');
 require('dotenv').config();
 const uri = process.env.MONGODB_URI;
 mongoose.connect(uri, {
@@ -21,6 +22,8 @@ app.get('/', (req, res) => {
   app.use('/candidate', candidateRoutes);
   app.use('/employer', employerRoutes);
   app.use('/job', require('./routes/JobRoutes'));
+  app.use('/group', groupRoutes);
+  
   
 app.listen(3000, '0.0.0.0', () => {
   console.log(`Server is running at http://0.0.0.0:3000`);

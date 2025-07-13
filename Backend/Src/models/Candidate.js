@@ -16,7 +16,11 @@ const candidateSchema = new mongoose.Schema({
   phone: {
     type: String,     
     required: false   
-  }
+  },
+  joinedGroups: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group'
+  }],
 }, { timestamps: true }); 
 
 module.exports = mongoose.model('Candidate', candidateSchema);
