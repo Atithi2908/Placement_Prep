@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = "atithi@1234"; // Ensure this secret is kept secure and not hardcoded in production
+const JWT_SECRET = process.env.JWT_SECRET; // Ensure this secret is kept secure and not hardcoded in production
 const authMiddleware = (req, res, next) => {
     
 const token = req.headers['token'];

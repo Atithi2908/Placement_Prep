@@ -25,9 +25,11 @@ const createGroup = async (req, res) => {
 
 const getGroups = async (req,res)=> {
     console.log("Get groups for user called");
-    const userId = req.user.groupId;
+    const userId = req.user.id;
     try {
        const groups = await Candidate.findById(userId).select('-password').populate('joinedGroups');
+      console.log("Groups fetched for user:", userId);
+       console.log(groups);
        res.status(200).json(groups);
     } catch (error) {
         console.error(error);
