@@ -258,7 +258,7 @@ class HomeScreen extends StatelessWidget {
               Expanded(
                 child: _buildActionButton(
                   context,
-                  'Review Mistakes',
+                  'Communities',
                   '📝',
                   Colors.white24,
                 ),
@@ -320,9 +320,7 @@ class HomeScreen extends StatelessWidget {
   ) {
     return ElevatedButton(
       onPressed: () {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Opening $title! $emoji')));
+       Navigator.pushNamed(context, '/group');
       },
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.all(16),

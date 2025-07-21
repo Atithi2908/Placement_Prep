@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:placement_prep/screens/group_screen.dart';
 import 'package:placement_prep/screens/task_screen.dart';
 import 'package:provider/provider.dart';
 import 'screens/login_screen.dart';
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
         '/task': (context) =>  DailyTaskScreen(),
         '/dailyquestion': (context) => DailyQuestionScreen(),
         '/conductquiz': (context) => ConductQuizScreen(defaultOption: 'Array'), // Default option can be changed
-        '/home': (context)=> HomeScreen()
+        '/home': (context)=> HomeScreen(),
+        '/group':(context)=> GroupScreen()
       },
           theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 232, 234, 255), // Dark Indigo
