@@ -7,12 +7,12 @@ groupId: {
     ref: 'Group',
     required: true
 },
-SenderId:{
+senderId:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Candidate',
     required: true
 },
-text: {
+message: {
     type: String,
     required: true
 },

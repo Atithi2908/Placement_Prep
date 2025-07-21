@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const JWT_SECRET = process.env.JWT_SECRET; // Ensure this secret is kept secure and not hardcoded in production
 const authMiddleware = (req, res, next) => {
     
